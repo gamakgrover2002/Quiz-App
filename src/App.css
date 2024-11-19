@@ -1,0 +1,11 @@
+* {
+  margin: 0px;
+  padding: 0px;
+}
+header > img {
+  width: 75px;
+  height: 75px;
+}
+header {
+  padding: 10px 10px;
+}
