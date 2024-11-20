@@ -12,7 +12,13 @@ type FormValues = {
   minutes: number;
   seconds: number;
 };
-
+type Response = Record<
+  string,
+  {
+    options: string;
+    answer: string;
+  }
+>;
 interface QuizProps {
   quizData: FormValues;
 }
@@ -20,17 +26,31 @@ function Quiz({ quizData }: QuizProps) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [testOver, setTestOver] = useState(false);
   const [score, setScore] = useState(0);
+  const [response, setResponse] = useState<Response>({});
 
-  const validateAnswer = (option: string, answer: string) => {
-    if (option === answer) {
+  const validateAnswer = (option: string, correctAnswer: string) => {
+    const isCorrect = option === correctAnswer;
+    setResponse((prev) => ({
+      ...prev,
+      [currentQuestion + 1]: { options: option, answer: correctAnswer },
+    }));
+
+    if (isCorrect) {
       setScore((prev) => prev + 1);
     }
+
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion((prev) => prev + 1);
     } else {
       setTestOver(true);
     }
+    console.log("Updated Response:", {
+      ...response,
+      [currentQuestion + 1]: { options: option, answer: correctAnswer },
+    });
   };
+
+  useEffect(() => {});
 
   const { questions } = useQuestions({
     category: quizData.category,
@@ -117,6 +137,14 @@ function Quiz({ quizData }: QuizProps) {
                       fontWeight: "bold",
                       textTransform: "capitalize",
                       flexBasis: "44%",
+                      color:
+                        response[currentQuestion + 1]?.options === e
+                          ? "white"
+                          : "blue",
+                      backgroundColor:
+                        response[currentQuestion + 1]?.options === e
+                          ? "blue"
+                          : "primary",
                     }}
                     onClick={() =>
                       validateAnswer(e, questions[currentQuestion].answer)
@@ -129,6 +157,66 @@ function Quiz({ quizData }: QuizProps) {
               </Box>
             </Box>
           )}
+          <Box
+            sx={{
+              display: "flex",
+              width: "100%",
+              flexWrap: "wrap",
+              marginTop: "20px",
+            }}
+          >
+            <Button
+              sx={{
+                flexBasis: {
+                  sx: "100%",
+                  md: "45%",
+                },
+                width: "100%",
+              }}
+              onClick={() => {
+                setCurrentQuestion((prev) => prev - 1);
+              }}
+              disabled={currentQuestion === 0}
+            >
+              Prev
+            </Button>
+            <Button
+              sx={{
+                flexBasis: {
+                  sx: "100%",
+                  md: "45%",
+                },
+                width: "100%",
+              }}
+              disabled={currentQuestion === questions.length - 1}
+              onClick={() => {
+                setCurrentQuestion((prev) => prev + 1);
+              }}
+            >
+              Next
+            </Button>
+          </Box>
+          <Button
+            onClick={() => {
+              setTestOver(true);
+            }}
+            sx={{
+              backgroundColor: "red",
+              color: "white",
+              fontWeight: "bold",
+              fontSize: "1.2rem",
+              textTransform: "capitalize",
+              opacity: 0.8,
+              mt: 2,
+              "&:hover": {
+                backgroundColor: "red",
+                opacity: 1,
+              },
+            }}
+            fullWidth
+          >
+            End Quiz
+          </Button>
         </Box>
       )}
     </>
