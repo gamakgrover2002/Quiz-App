@@ -1,10 +1,16 @@
 import Timer from "../components/Timer";
 import { useQuestions } from "../hooks/useQuestions";
 import { useTimer } from "../hooks/useTimer";
-import { Box, Button, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Typography,
+  Table,
+  TableCell,
+  TableRow,
+} from "@mui/material";
 import { data } from "../data.ts";
 import { useEffect, useState } from "react";
-
 type FormValues = {
   category: string;
   numberOfQuestions: number;
@@ -82,7 +88,83 @@ function Quiz({ quizData }: QuizProps) {
             gap: "30px",
           }}
         >
-          <Typography variant="h1">Test Over! Your Score is {score}</Typography>
+          <Typography variant="h1">Test Over!</Typography>
+          <Typography
+            variant="h6"
+            sx={{
+              opacity: "0.4",
+            }}
+          >
+            Here's your Report
+          </Typography>
+          <Table>
+            <TableRow
+              sx={{
+                textAlign: "center",
+              }}
+            >
+              <TableCell
+                sx={{
+                  width: "50%",
+                  textAlign: "center",
+                }}
+              >
+                Total Questions
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: "50%",
+                  textAlign: "center",
+                }}
+              >
+                {questions.length}
+              </TableCell>
+            </TableRow>
+            <TableRow
+              sx={{
+                textAlign: "center",
+              }}
+            >
+              <TableCell
+                sx={{
+                  width: "50%",
+                  textAlign: "center",
+                }}
+              >
+                Correct
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: "50%",
+                  textAlign: "center",
+                }}
+              >
+                {score}
+              </TableCell>
+            </TableRow>
+            <TableRow
+              sx={{
+                textAlign: "center",
+              }}
+            >
+              <TableCell
+                sx={{
+                  width: "50%",
+                  textAlign: "center",
+                }}
+              >
+                Incorrect
+              </TableCell>
+              <TableCell
+                sx={{
+                  width: "50%",
+                  textAlign: "center",
+                }}
+              >
+                {questions.length - score}
+              </TableCell>
+            </TableRow>
+          </Table>
           <Button
             onClick={() => {
               location.reload();
